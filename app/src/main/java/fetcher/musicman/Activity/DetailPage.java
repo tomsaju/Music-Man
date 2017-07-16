@@ -1,10 +1,13 @@
 package fetcher.musicman.Activity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Vibrator;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +15,7 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +23,8 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -42,8 +48,11 @@ public class DetailPage extends AppCompatActivity implements IDetailView,IMainLi
     String singer;
     ListView youtubeList;
     TextView titletxt,singertxt,downloadProgress;
+    ImageView mainImageView;
     ArrayList<Song> youtubeSongList;
     Song selectedSong;
+    String youtubeURL;
+    String youtubeTitle;
     String MAX_RESULTS = "5";
     String YOUTUBE_API_KEY = "AIzaSyAnoU5N78yVwk2er4dQcvq7bdXCMc6lfJE";
     String REQUEST_BASE_URL = "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=";
@@ -59,67 +68,108 @@ public class DetailPage extends AppCompatActivity implements IDetailView,IMainLi
         downloadProgress = (TextView) findViewById(R.id.download_progress);
         downloadProgress.setVisibility(View.INVISIBLE);
         youtubeList = (ListView) findViewById(R.id.youtube_listview);
+        mainImageView = (ImageView) findViewById(R.id.imageview_main);
         this.registerForContextMenu(youtubeList);
         Bundle extras = getIntent().getExtras();
         if(extras!=null){
+            youtubeURL = extras.getString(Intent.EXTRA_TEXT);
+            youtubeTitle = extras.getString(Intent.EXTRA_SUBJECT);
             title = getIntent().getStringExtra("title");
             singer = getIntent().getStringExtra("singer");
         }
+        if(youtubeURL!=null&&!youtubeURL.isEmpty()){
+            if(youtubeTitle!=null&&!youtubeTitle.isEmpty()){
+                String tempTitle = youtubeTitle.substring(youtubeTitle.indexOf("\""),youtubeTitle.lastIndexOf("\""));
+                if(tempTitle!=null&&!tempTitle.isEmpty()){
+                    titletxt.setText(tempTitle);
+                    Song song = new Song();
+                    song.setTitle(tempTitle);
+                    selectedSong = song;
+                }else{
+                    long currentTimeStamp = System.currentTimeMillis();
+                    Song song = new Song();
+                    song.setTitle(String.valueOf(currentTimeStamp));
+                    selectedSong = song;
+                }
+            }else{
+                long currentTimeStamp = System.currentTimeMillis();
+                Song song = new Song();
+                song.setTitle(String.valueOf(currentTimeStamp));
+                selectedSong = song;
+            }
 
-        titletxt.setText(title);
-        singertxt.setText(singer);
+            String videoId = "";
+            if(youtubeURL.contains("watch")){
+                videoId = youtubeURL.substring(youtubeURL.lastIndexOf("v=")+1);
+            }else{
+                videoId = youtubeURL.substring(youtubeURL.lastIndexOf("/")+1);
+            }
+            mDetailController.getDownloadUrl(videoId);
+            downloadSong(youtubeURL);
+        }else {
+            int colonIndex = title.indexOf(":");
+            titletxt.setText(title.substring(colonIndex + 1));
+            singertxt.setText(singer);
 
-        String REQUEST_URL =REQUEST_BASE_URL +title+" "+singer+REQUEST_FINAL_PART;
-        String finalURL = REQUEST_URL.replaceAll(" ", "%20");
+            String REQUEST_URL = REQUEST_BASE_URL + title + " " + singer + REQUEST_FINAL_PART;
+            String finalURL = REQUEST_URL.replaceAll(" ", "%20");
 
-        JsonObjectRequest request = new JsonObjectRequest(finalURL, null,
-                new Response.Listener<JSONObject>() {
+            JsonObjectRequest request = new JsonObjectRequest(finalURL, null,
+                    new Response.Listener<JSONObject>() {
 
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            JSONArray items = response.getJSONArray("items");
-                            //String videoid = get video id
-                            if(items!=null) {
-                             youtubeSongList = new ArrayList<>();
-                                for (int n = 0; n < items.length(); n++) {
-                                    Song song = new Song();
-                                    JSONObject object = items.getJSONObject(n);
-                                    String videoId = object.getJSONObject("id").getString("videoId");
-                                    String title = object.getJSONObject("snippet").getString("title");
-                                    String albumArtCoverUrl = object.getJSONObject("snippet").getJSONObject("thumbnails").getJSONObject("default").getString("url");
-                                    song.setTitle(title);
-                                    song.setVideoId(videoId);
-                                    song.setAlbumArtUrl(albumArtCoverUrl);
-                                    youtubeSongList.add(song);
-                                    Log.d(TAG, "onResponse videoId " + videoId);
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                JSONArray items = response.getJSONArray("items");
+                                //String videoid = get video id
+                                if (items != null) {
+                                    youtubeSongList = new ArrayList<>();
+                                    for (int n = 0; n < items.length(); n++) {
+                                        Song song = new Song();
+                                        JSONObject object = items.getJSONObject(n);
+                                        String videoId = object.getJSONObject("id").getString("videoId");
+                                        String title = object.getJSONObject("snippet").getString("title");
+                                        String albumArtCoverUrl = object.getJSONObject("snippet").getJSONObject("thumbnails").getJSONObject("high").getString("url");
+                                        song.setTitle(title);
+                                        song.setVideoId(videoId);
+                                        song.setAlbumArtUrl(albumArtCoverUrl);
+                                        youtubeSongList.add(song);
+                                        Log.d(TAG, "onResponse videoId " + videoId);
+                                    }
+                                    Log.d(TAG, "onResponse: " + response.toString());
                                 }
-                                Log.d(TAG, "onResponse: " + response.toString());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            } finally {
+                                loadSongList(youtubeSongList);
                             }
-                        }catch(Exception e){
-                            e.printStackTrace();
-                        }finally{
-                            loadSongList(youtubeSongList);
+                        }
+                    },
+
+                    new Response.ErrorListener() {
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d(TAG, "onErrorResponse: " + error.toString());
                         }
                     }
-                },
+            );
 
-                new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d(TAG, "onErrorResponse: "+error.toString());
-                    }
-                }
-        );
-
-        VolleyApplication.getInstance().getRequestQueue().add(request);
-
+            VolleyApplication.getInstance().getRequestQueue().add(request);
+        }
     }
 
     private void loadSongList(ArrayList<Song> youtubeSongList) {
 
     if(youtubeList!=null){
+        if(youtubeSongList.get(0)!=null) {
+            String albumArt = youtubeSongList.get(0).getAlbumArtUrl();
+            Glide.with(this).load(albumArt)
+                    .thumbnail(0.5f)
+                    .centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(mainImageView);
+        }
         YoutubeListAdapter ytAdapter = new YoutubeListAdapter(this,youtubeSongList,getBaseContext());
         youtubeList.setAdapter(ytAdapter);
     }
@@ -176,7 +226,15 @@ public class DetailPage extends AppCompatActivity implements IDetailView,IMainLi
     @Override
     public void onDownloadComplete(String filename) {
         Toast.makeText(DetailPage.this, "Download Complete", Toast.LENGTH_SHORT).show();
+        vibrate();
         downloadProgress.setVisibility(View.INVISIBLE);
+
+
+    }
+
+    private void vibrate() {
+        Vibrator v = (Vibrator)getBaseContext().getSystemService(Context.VIBRATOR_SERVICE);
+        v.vibrate(200);
     }
 
     @Override
