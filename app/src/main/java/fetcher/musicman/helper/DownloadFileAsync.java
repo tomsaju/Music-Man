@@ -1,5 +1,6 @@
 package fetcher.musicman.helper;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -14,6 +15,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
+import fetcher.musicman.Activity.DetailPage;
 import fetcher.musicman.controller.Main.IMainListener;
 
 /**
@@ -21,6 +23,7 @@ import fetcher.musicman.controller.Main.IMainListener;
  */
 
 public class DownloadFileAsync extends AsyncTask<String, String, String> {
+    ProgressDialog asyncDialog;
     IMainListener iMainListener;
     Context context;
     public  String songName;
@@ -34,6 +37,12 @@ public class DownloadFileAsync extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPreExecute() {
+         asyncDialog = new ProgressDialog((DetailPage)context);
+        asyncDialog.setCancelable(false);
+        //set message of the dialog
+        asyncDialog.setMessage("Downloading...");
+        //show dialog
+        asyncDialog.show();
         super.onPreExecute();
 
     }
@@ -71,13 +80,15 @@ public class DownloadFileAsync extends AsyncTask<String, String, String> {
 
     protected void onProgressUpdate(String... progress) {
         Log.d("ANDRO_ASYNC",progress[0]);
-        iMainListener.progressUpdate(progress[0]);
+        asyncDialog.setMessage("Downloading :"+progress[0]+" % complete");
 
     }
 
     @Override
     protected void onPostExecute(String unused) {
+        asyncDialog.dismiss();
         iMainListener.onDownloadComplete("filename");
+
     }
 
     public String getSongName() {

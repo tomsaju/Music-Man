@@ -14,18 +14,21 @@ import java.util.ArrayList;
 import fetcher.musicman.Adapter.ListAdapter;
 import fetcher.musicman.Models.Song;
 import fetcher.musicman.R;
+import fetcher.musicman.controller.Main.IMainController;
 import fetcher.musicman.controller.Main.IMainListener;
+import fetcher.musicman.controller.Main.MainController;
 
 public class MainActivity extends AppCompatActivity implements IMainListener {
     private static final String TAG = "MainActivity";
     ArrayList<Song> billboardList;
     ListView topList;
+    IMainController mainController;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         topList = (ListView) findViewById(R.id.listview_main);
-
+        mainController = new MainController(this,this);
         String urlString = "http://www.billboard.com/rss/charts/hot-100";
         Parser parser = new Parser();
         parser.execute(urlString);
@@ -47,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements IMainListener {
                     billboardList.add(song);
                 }
                 if(!billboardList.isEmpty()){
-
+                   // mainController.retrieveAlbumArt(billboardList);
                     ListAdapter adapter = new ListAdapter(MainActivity.this,billboardList);
                     topList.setAdapter(adapter);
                 }
@@ -56,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements IMainListener {
             @Override
             public void onError() {
                 //what to do in case of error
+                Toast.makeText(MainActivity.this, "Cannot retrieve items", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -67,6 +71,6 @@ public class MainActivity extends AppCompatActivity implements IMainListener {
 
     @Override
     public void progressUpdate(String... progress) {
-
+//progress of download
     }
 }

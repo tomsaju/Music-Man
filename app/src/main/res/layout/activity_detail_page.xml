@@ -4,33 +4,63 @@
     android:id="@+id/activity_detail_page"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#484e56"
     tools:context="fetcher.musicman.Activity.DetailPage">
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="download progress"
-    android:id="@+id/download_progress"/>
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="28dp"
-        android:id="@+id/textView_title" />
+<!--detail page changes-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/top_portion">
 
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView_title"
-        android:layout_alignEnd="@+id/textView_title"
-        android:layout_marginTop="25dp"
-        android:id="@+id/textView_singer" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/imageview_main"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#80000000"></LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="download progress"
+            android:textColor="#ffffff"
+            android:id="@+id/download_progress"/>
+        <TextView
+            android:text=""
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:id="@+id/textView_title"
+            android:textSize="38sp"
+            android:typeface="sans"
+            android:maxLength="28"
+            android:textColor="#ffffff"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:textAlignment="center"/>
+
+        <TextView
+            android:text=""
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_singer"
+            android:textSize="18sp"
+            android:textColor="#ffffff"
+            android:maxLength="28"
+            android:layout_below="@+id/textView_title"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+
 
    <ListView
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
-       android:layout_below="@+id/textView_singer"
+       android:layout_marginTop="12dp"
+       android:layout_marginRight="8dp"
+       android:layout_marginLeft="8dp"
+       android:layout_below="@+id/top_portion"
+       android:divider="@null"
+       android:dividerHeight="5dp"
        android:id="@+id/youtube_listview"></ListView>
 </RelativeLayout>

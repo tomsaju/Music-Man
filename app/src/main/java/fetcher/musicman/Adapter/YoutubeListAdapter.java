@@ -5,8 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
 
@@ -49,6 +53,7 @@ public class YoutubeListAdapter extends BaseAdapter {
        LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
        view = inflater.inflate(R.layout.youtube_list_item,null);
         LinearLayout layoutParent = (LinearLayout) view.findViewById(R.id.layout_parent);
+        ImageView thumbImageView = (ImageView) view.findViewById(R.id.thumbimageView);
         TextView title = (TextView)view.findViewById(R.id.title_text);
         title.setText(songList.get(i).getTitle());
         layoutParent.setOnClickListener(new View.OnClickListener() {
@@ -57,6 +62,11 @@ public class YoutubeListAdapter extends BaseAdapter {
                 iDetailView.onListItemClicked(songList.get(i));
             }
         });
+        Glide.with(context).load(songList.get(i).getAlbumArtUrl())
+                .thumbnail(0.5f)
+                .crossFade()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(thumbImageView);
         return view;
     }
 }
