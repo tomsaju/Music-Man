@@ -30,6 +30,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import fetcher.musicman.Adapter.YoutubeListAdapter;
 import fetcher.musicman.Application.VolleyApplication;
@@ -133,7 +134,9 @@ public class DetailPage extends AppCompatActivity implements IDetailView,IMainLi
                                         song.setTitle(title);
                                         song.setVideoId(videoId);
                                         song.setAlbumArtUrl(albumArtCoverUrl);
-                                        youtubeSongList.add(song);
+                                        if(itemPassCheck(song)){
+                                            youtubeSongList.add(song);
+                                        }
                                         Log.d(TAG, "onResponse videoId " + videoId);
                                     }
                                     Log.d(TAG, "onResponse: " + response.toString());
@@ -157,6 +160,23 @@ public class DetailPage extends AppCompatActivity implements IDetailView,IMainLi
 
             VolleyApplication.getInstance().getRequestQueue().add(request);
         }
+    }
+
+    private boolean itemPassCheck(Song song) {
+        boolean pass = true;
+        ArrayList<String> filterStringList = new ArrayList<>();
+        filterStringList.add("reaction");
+        filterStringList.add("things you didn't notice");
+        filterStringList.add("react");
+        //checks id video contains any reaction videos
+        for (int i = 0; i <filterStringList.size() ; i++) {
+            String filterString = filterStringList.get(i);
+            if(!title.toLowerCase().contains(filterString)&&song.getTitle().toLowerCase().contains(filterString)){
+                pass = false;
+                break;
+            }
+        }
+        return pass;
     }
 
     private void loadSongList(ArrayList<Song> youtubeSongList) {
@@ -196,10 +216,13 @@ public class DetailPage extends AppCompatActivity implements IDetailView,IMainLi
     }
 
     private void downloadSong(String url) {
-
+        //To download via async task
         DownloadFileAsync downloader = new DownloadFileAsync(this,this);
         downloader.setSongName(selectedSong.getTitle());
         downloader.execute(url);
+
+        //To download via download manager
+      //  Uri downloadURI = Uri.parse(url);
 
     }
 
@@ -241,6 +264,11 @@ public class DetailPage extends AppCompatActivity implements IDetailView,IMainLi
     public void progressUpdate(String... progress) {
         downloadProgress.setVisibility(View.VISIBLE);
         downloadProgress.setText(progress[0]+" %");
+    }
+
+    @Override
+    public void onSongsFetched(ArrayList<Song> songsList) {
+
     }
 
     public  boolean isStoragePermissionGranted() {

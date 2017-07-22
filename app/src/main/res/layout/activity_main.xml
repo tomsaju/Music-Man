@@ -9,6 +9,9 @@
     android:background="#484e56"
     tools:context="fetcher.musicman.Activity.MainActivity">
 <!--main activity layout changed-->
+
+
+
   <ListView
       android:layout_width="match_parent"
       android:layout_height="match_parent"
@@ -16,5 +19,6 @@
       android:dividerHeight="5dp"
       android:layout_marginRight="8dp"
       android:layout_marginLeft="8dp"
+      android:layout_below="@id/search_parent"
       android:id="@+id/listview_main"></ListView>
 </RelativeLayout>

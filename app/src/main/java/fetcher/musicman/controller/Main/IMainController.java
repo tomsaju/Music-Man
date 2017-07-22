@@ -11,4 +11,5 @@ import fetcher.musicman.Models.Song;
 public interface IMainController  {
     void saveSong(String url);
     ArrayList<Song> retrieveAlbumArt(ArrayList<Song> songList);
+    void getSongs(String url);
 }
