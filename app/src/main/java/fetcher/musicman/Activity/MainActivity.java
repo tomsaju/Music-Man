@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements IMainListener {
 
     @Override
     public void onSongsFetched(ArrayList<Song> songsList) {
+        //Called when rss parsing is complete
         if(!songsList.isEmpty()){
             ListAdapter adapter = new ListAdapter(MainActivity.this,songsList);
             topList.setAdapter(adapter);

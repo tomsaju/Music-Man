@@ -50,13 +50,6 @@ public class MainController implements IMainController {
         ArrayList<Song> newSongList=new ArrayList<>();
         Song song = getAlbumArt(songList.get(0));
         newSongList.add(song);
-      /*  for(int i=0;i<songList.size();i++){
-            Song song = getAlbumArt(songList.get(i));
-            newSongList.add(song);
-        }
-        if(newSongList==null||newSongList.isEmpty()){
-            newSongList = songList;
-        }*/
         return newSongList;
     }
 
