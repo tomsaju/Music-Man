@@ -7,8 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
 
@@ -48,14 +52,21 @@ public class ListAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        convertView = inflater.inflate(R.layout.listview_layout,null);
-        TextView title = (TextView) convertView.findViewById(R.id.title);
-        TextView singer = (TextView) convertView.findViewById(R.id.singer);
-        LinearLayout mainLayoutListItem = (LinearLayout) convertView.findViewById(R.id.main_layout_list_item);
 
+        convertView = inflater.inflate(R.layout.main_list_item,null);
+        LinearLayout layoutParent = (LinearLayout) convertView.findViewById(R.id.layout_parent);
+        ImageView thumbImageView = (ImageView) convertView.findViewById(R.id.thumbimageView);
+        TextView title = (TextView)convertView.findViewById(R.id.title_text);
         title.setText(songList.get(position).getTitle());
-        singer.setText(songList.get(position).getSinger());
-        mainLayoutListItem.setOnClickListener(new View.OnClickListener() {
+        TextView artist = (TextView) convertView.findViewById(R.id.singer_tv);
+        Glide.with(context).load(songList.get(position).getAlbumArtUrl())
+                .thumbnail(0.5f)
+                .crossFade()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(thumbImageView);
+
+        artist.setText(songList.get(position).getSinger());
+        layoutParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(context, DetailPage.class);
