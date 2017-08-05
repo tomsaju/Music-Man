@@ -23,7 +23,7 @@ import fetcher.musicman.controller.Main.IMainListener;
 import fetcher.musicman.controller.Main.MainController;
 import fetcher.musicman.helper.Utility;
 
-public class MainActivity extends AppCompatActivity implements IMainListener {
+public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     ArrayList<Song> mainSongList;
     ListView topList;
@@ -35,37 +35,18 @@ public class MainActivity extends AppCompatActivity implements IMainListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        topList = (ListView) findViewById(R.id.listview_main);
-        mainController = new MainController(this, this);
-        Utility util = new Utility();
-        if(util.isNetworkAvailable(this)) {
-            showLoader();
-            mainController.getSongs(urlString);
+
+
+
+        if(Utility.isNetworkAvailable(this)) {
+
         }else{
             //Show no network message
             Toast.makeText(MainActivity.this, "No Network", Toast.LENGTH_SHORT).show();
         }
     }
 
-    @Override
-    public void onDownloadComplete(String filename) {
-        Toast.makeText(MainActivity.this, "Download Complete", Toast.LENGTH_SHORT).show();
-    }
 
-    @Override
-    public void progressUpdate(String... progress) {
-        //progress of download
-    }
-
-    @Override
-    public void onSongsFetched(ArrayList<Song> songsList) {
-        hideLoader();
-        //Called when rss parsing is complete
-        if(!songsList.isEmpty()){
-            ListAdapter adapter = new ListAdapter(MainActivity.this,songsList);
-            topList.setAdapter(adapter);
-        }
-    }
 
     private void showLoader(){
         if(progressDialog==null) {
