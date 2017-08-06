@@ -9,6 +9,7 @@ public class Song {
     String singer;
     String videoId;
     String albumArtUrl;
+    String duration;
 
     public String getTitle() {
         return title;
@@ -40,5 +41,13 @@ public class Song {
 
     public void setAlbumArtUrl(String albumArtUrl) {
         this.albumArtUrl = albumArtUrl;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
     }
 }

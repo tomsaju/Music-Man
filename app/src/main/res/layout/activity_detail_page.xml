@@ -4,7 +4,7 @@
     android:id="@+id/activity_detail_page"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#484e56"
+    android:background="?attr/colorPrimary"
     tools:context="fetcher.musicman.Activity.DetailPage">
 <!--detail page changes-->
     <RelativeLayout
@@ -18,8 +18,7 @@
             android:id="@+id/imageview_main"/>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#80000000"></LinearLayout>
+            android:layout_height="match_parent"></LinearLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -60,7 +59,6 @@
        android:layout_marginRight="8dp"
        android:layout_marginLeft="8dp"
        android:layout_below="@+id/top_portion"
-       android:divider="@null"
        android:dividerHeight="5dp"
        android:id="@+id/youtube_listview"></ListView>
 </RelativeLayout>

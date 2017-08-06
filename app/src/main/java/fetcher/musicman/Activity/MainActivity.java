@@ -1,42 +1,48 @@
 package fetcher.musicman.Activity;
 
 import android.app.ProgressDialog;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.ListView;
+import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
-import com.prof.rssparser.Article;
-import com.prof.rssparser.Parser;
-
-import java.util.ArrayList;
-
-import fetcher.musicman.Adapter.ListAdapter;
-import fetcher.musicman.Adapter.YoutubeListAdapter;
-import fetcher.musicman.Models.Song;
+import fetcher.musicman.Adapter.PagerAdapter;
+import fetcher.musicman.Fragment.DownloadFragment;
+import fetcher.musicman.Fragment.TopItemFragment;
 import fetcher.musicman.R;
-import fetcher.musicman.controller.Main.IMainController;
-import fetcher.musicman.controller.Main.IMainListener;
-import fetcher.musicman.controller.Main.MainController;
 import fetcher.musicman.helper.Utility;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener,TopItemFragment.TopItemFragmentListener,DownloadFragment.OnFragmentInteractionListener{
     private static final String TAG = "MainActivity";
-    ArrayList<Song> mainSongList;
-    ListView topList;
-    String MAX_RESULT = "20";
-    String urlString = "https://rss.itunes.apple.com/api/v1/in/apple-music/top-songs/"+MAX_RESULT+"/explicit/json";
-    IMainController mainController;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
     ProgressDialog progressDialog;
+    public static String MAX_RESULT_TOP_SONG = "50";
+    public static String MAX_RESULT_NEW_RELEASE = "50";
+    public static String urlStringTopSongs = "https://rss.itunes.apple.com/api/v1/in/apple-music/top-songs/"+MAX_RESULT_TOP_SONG+"/explicit/json";
+    public static String urlStringNewReleaseSongs = "https://rss.itunes.apple.com/api/v1/in/apple-music/new-music/"+MAX_RESULT_NEW_RELEASE+"/explicit/json";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
 
+
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), 3);
+
+        //Adding adapter to pager
+        viewPager.setAdapter(adapter);
+
+        //Adding onTabSelectedListener to swipe views
+        tabLayout.setOnTabSelectedListener(this);
+        tabLayout.setupWithViewPager(viewPager);
 
         if(Utility.isNetworkAvailable(this)) {
 
@@ -62,4 +68,26 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+        viewPager.setCurrentItem(tab.getPosition());
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+
 }

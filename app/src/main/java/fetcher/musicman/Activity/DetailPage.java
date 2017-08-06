@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.github.florent37.glidepalette.GlidePalette;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -47,9 +49,11 @@ public class DetailPage extends AppCompatActivity implements IDetailView,IMainLi
     IDetailController mDetailController;
     String title;
     String singer;
+    String imageUrl;
     ListView youtubeList;
     TextView titletxt,singertxt,downloadProgress;
     ImageView mainImageView;
+    RelativeLayout topPortion;
     ArrayList<Song> youtubeSongList;
     Song selectedSong;
     String youtubeURL;
@@ -68,6 +72,7 @@ public class DetailPage extends AppCompatActivity implements IDetailView,IMainLi
         singertxt = (TextView) findViewById(R.id.textView_singer);
         downloadProgress = (TextView) findViewById(R.id.download_progress);
         downloadProgress.setVisibility(View.INVISIBLE);
+        topPortion = (RelativeLayout) findViewById(R.id.top_portion);
         youtubeList = (ListView) findViewById(R.id.youtube_listview);
         mainImageView = (ImageView) findViewById(R.id.imageview_main);
         this.registerForContextMenu(youtubeList);
@@ -77,6 +82,7 @@ public class DetailPage extends AppCompatActivity implements IDetailView,IMainLi
             youtubeTitle = extras.getString(Intent.EXTRA_SUBJECT);
             title = getIntent().getStringExtra("title");
             singer = getIntent().getStringExtra("singer");
+            imageUrl = getIntent().getStringExtra("imageurl");
         }
         if(youtubeURL!=null&&!youtubeURL.isEmpty()){
             if(youtubeTitle!=null&&!youtubeTitle.isEmpty()){
@@ -180,16 +186,15 @@ public class DetailPage extends AppCompatActivity implements IDetailView,IMainLi
     }
 
     private void loadSongList(ArrayList<Song> youtubeSongList) {
+        Glide.with(getBaseContext()).load(imageUrl)
+                .listener(GlidePalette.with(imageUrl)
+                                .use(GlidePalette.Profile.VIBRANT)
+                                .intoBackground(topPortion, GlidePalette.Swatch.RGB)
+                                .crossfade(true)
+                )
+                .into((mainImageView));
 
     if(youtubeList!=null){
-        if(youtubeSongList.get(0)!=null) {
-            String albumArt = youtubeSongList.get(0).getAlbumArtUrl();
-            Glide.with(this).load(albumArt)
-                    .thumbnail(0.5f)
-                    .centerCrop()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(mainImageView);
-        }
         YoutubeListAdapter ytAdapter = new YoutubeListAdapter(this,youtubeSongList,getBaseContext());
         youtubeList.setAdapter(ytAdapter);
     }
@@ -210,6 +215,7 @@ public class DetailPage extends AppCompatActivity implements IDetailView,IMainLi
             openYoutube();
         }else{
            mDetailController.getDownloadUrl(selectedSong.getVideoId());
+
         }
         return true;
 
@@ -240,7 +246,8 @@ public class DetailPage extends AppCompatActivity implements IDetailView,IMainLi
     @Override
     public void onDownloadURLObtain(String URL) {
         if(isStoragePermissionGranted()) {
-            downloadSong(URL);
+           // downloadSong(URL);
+            mDetailController.DownloadData(Uri.parse(URL),selectedSong.getTitle());
         }else{
             Toast.makeText(DetailPage.this, "No storage permission", Toast.LENGTH_SHORT).show();
         }

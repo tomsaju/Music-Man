@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+<ImageView
+    android:layout_width="180dp"
+    android:layout_height="180dp"
+    android:src="@drawable/placeholder"
+    android:id="@+id/imageview_album_art"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/text_card_background"
+        android:background="#576172"
+        android:padding="4dp"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textview_album_title"
+            android:textSize="21sp"
+            android:padding="4dp"
+            android:maxLines="1"
+            android:ems="28"
+            android:textColor="#ffffff"
+            android:text="Shape of you"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textview_artist_name"
+            android:layout_below="@id/textview_album_title"
+            android:padding="4dp"
+            android:textSize="16sp"
+            android:maxLines="1"
+            android:textColor="#f4f8ff"
+            android:text="Ed Sheeran"/>
+    </RelativeLayout>
+</LinearLayout>

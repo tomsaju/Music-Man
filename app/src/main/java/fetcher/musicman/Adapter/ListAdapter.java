@@ -61,8 +61,6 @@ public class ListAdapter extends BaseAdapter {
         TextView artist = (TextView) convertView.findViewById(R.id.singer_tv);
         Glide.with(context).load(songList.get(position).getAlbumArtUrl())
                 .thumbnail(0.5f)
-                .crossFade()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(thumbImageView);
 
         artist.setText(songList.get(position).getSinger());
