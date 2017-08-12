@@ -10,6 +10,10 @@ public class Song {
     String videoId;
     String albumArtUrl;
     String duration;
+    String id;
+    String downloadLocation;
+    String downloadDate;
+    String status;
 
     public String getTitle() {
         return title;
@@ -49,5 +53,37 @@ public class Song {
 
     public void setDuration(String duration) {
         this.duration = duration;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getDownloadLocation() {
+        return downloadLocation;
+    }
+
+    public void setDownloadLocation(String downloadLocation) {
+        this.downloadLocation = downloadLocation;
+    }
+
+    public String getDownloadDate() {
+        return downloadDate;
+    }
+
+    public void setDownloadDate(String downloadDate) {
+        this.downloadDate = downloadDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

@@ -12,4 +12,5 @@ public interface IMainListener {
     void onDownloadComplete(String filename);
     void progressUpdate(String... progress);
     void onSongsFetched(ArrayList<Song> songsList);//rss parsing completion callback
+    void onDownloadStatusReceive();
 }

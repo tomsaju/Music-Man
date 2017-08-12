@@ -22,8 +22,8 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     ProgressDialog progressDialog;
     public static String MAX_RESULT_TOP_SONG = "50";
     public static String MAX_RESULT_NEW_RELEASE = "50";
-    public static String urlStringTopSongs = "https://rss.itunes.apple.com/api/v1/in/apple-music/top-songs/"+MAX_RESULT_TOP_SONG+"/explicit/json";
-    public static String urlStringNewReleaseSongs = "https://rss.itunes.apple.com/api/v1/in/apple-music/new-music/"+MAX_RESULT_NEW_RELEASE+"/explicit/json";
+    public static String urlStringTopSongs = "https://rss.itunes.apple.com/api/v1/in/apple-music/top-songs/"+MAX_RESULT_TOP_SONG+"/explicit.json";
+    public static String urlStringNewReleaseSongs = "https://rss.itunes.apple.com/api/v1/in/apple-music/new-music/"+MAX_RESULT_NEW_RELEASE+"/explicit.json";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
         //Adding adapter to pager
         viewPager.setAdapter(adapter);
+        viewPager.setOffscreenPageLimit(3);
 
         //Adding onTabSelectedListener to swipe views
         tabLayout.setOnTabSelectedListener(this);

@@ -12,4 +12,5 @@ public interface IMainController  {
     void saveSong(String url);
     ArrayList<Song> retrieveAlbumArt(ArrayList<Song> songList);
     void getSongs(String url);//for rss parsing
+     ArrayList<Song> getAlldownloads();
 }

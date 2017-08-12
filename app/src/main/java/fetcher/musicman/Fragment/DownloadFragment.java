@@ -7,8 +7,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
+import java.util.ArrayList;
+
+import fetcher.musicman.Adapter.DownloadAdapter;
+import fetcher.musicman.Adapter.YoutubeListAdapter;
+import fetcher.musicman.Models.Song;
 import fetcher.musicman.R;
+import fetcher.musicman.controller.Main.IMainController;
+import fetcher.musicman.controller.Main.IMainListener;
+import fetcher.musicman.controller.Main.MainController;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,20 +25,34 @@ import fetcher.musicman.R;
  * {@link DownloadFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class DownloadFragment extends Fragment {
+public class DownloadFragment extends Fragment implements IMainListener {
 
     private OnFragmentInteractionListener mListener;
-
+    ListView downloadsList;
+    ArrayList<Song> songArrayList;
+    IMainController mainController;
     public DownloadFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mainController = new MainController(getContext(), this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_download, container, false);
+        View view =inflater.inflate(R.layout.fragment_download, container, false);
+        downloadsList = (ListView) view.findViewById(R.id.downloads_list);
+        songArrayList =mainController.getAlldownloads();
+        if(songArrayList!=null&&!songArrayList.isEmpty()){
+            DownloadAdapter adapter = new DownloadAdapter(songArrayList,getContext());
+            downloadsList.setAdapter(adapter);
+        }
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -54,6 +77,31 @@ public class DownloadFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onDownloadComplete(String filename) {
+
+    }
+
+    @Override
+    public void progressUpdate(String... progress) {
+
+    }
+
+    @Override
+    public void onSongsFetched(ArrayList<Song> songsList) {
+
+    }
+
+    @Override
+    public void onDownloadStatusReceive() {
+        songArrayList =mainController.getAlldownloads();
+        ((DownloadAdapter)downloadsList.getAdapter()).notifyDataSetChanged();
+        /*if(songArrayList!=null&&!songArrayList.isEmpty()){
+            DownloadAdapter adapter = new DownloadAdapter(songArrayList,getContext());
+            downloadsList.setAdapter(adapter);
+        }*/
     }
 
     /**

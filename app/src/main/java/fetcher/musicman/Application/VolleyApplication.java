@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.facebook.stetho.Stetho;
 
 /**
  * Created by tom.saju on 7/13/2017.
@@ -18,7 +19,7 @@ public class VolleyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        Stetho.initializeWithDefaults(this);
         mRequestQueue = Volley.newRequestQueue(this);
 
         sInstance = this;

@@ -41,7 +41,7 @@ public class TopItemFragment extends Fragment implements IMainListener,RecyclerL
     private static final String TAG = "MainActivity";
     ArrayList<Song> mainSongList;
     String MAX_RESULT = "50";
-    String urlString = "https://rss.itunes.apple.com/api/v1/in/apple-music/top-songs/"+MAX_RESULT+"/explicit/json";
+    String urlString = "https://rss.itunes.apple.com/api/v1/in/apple-music/top-songs/"+MAX_RESULT+"/explicit.json";
     IMainController mainController;
     ProgressDialog progressDialog;
     private TopItemFragmentListener mListener;
@@ -119,6 +119,11 @@ public class TopItemFragment extends Fragment implements IMainListener,RecyclerL
             songRecyclerView.setItemAnimator(new DefaultItemAnimator());
             songRecyclerView.setAdapter(mAdapter);
         }
+    }
+
+    @Override
+    public void onDownloadStatusReceive() {
+
     }
 
     @Override

@@ -62,6 +62,7 @@ public class DetailPage extends AppCompatActivity implements IDetailView,IMainLi
     String YOUTUBE_API_KEY = "AIzaSyAnoU5N78yVwk2er4dQcvq7bdXCMc6lfJE";
     String REQUEST_BASE_URL = "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=";
     String REQUEST_FINAL_PART = "&maxResults="+MAX_RESULTS+"&key="+YOUTUBE_API_KEY;
+
   //  https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=eminem%20lost&maxResults=2&key=AIzaSyBqXp0Uo2ktJcMRpL_ZwF5inLTWZfsCYqY
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,6 +175,9 @@ public class DetailPage extends AppCompatActivity implements IDetailView,IMainLi
         filterStringList.add("reaction");
         filterStringList.add("things you didn't notice");
         filterStringList.add("react");
+        filterStringList.add("trailer");
+        filterStringList.add("teaser");
+        filterStringList.add("interview");
         //checks id video contains any reaction videos
         for (int i = 0; i <filterStringList.size() ; i++) {
             String filterString = filterStringList.get(i);
@@ -275,6 +279,11 @@ public class DetailPage extends AppCompatActivity implements IDetailView,IMainLi
 
     @Override
     public void onSongsFetched(ArrayList<Song> songsList) {
+
+    }
+
+    @Override
+    public void onDownloadStatusReceive() {
 
     }
 

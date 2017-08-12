@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import fetcher.musicman.Application.VolleyApplication;
 import fetcher.musicman.Models.Song;
+import fetcher.musicman.helper.DBHelper;
 
 /**
  * Created by tom.saju on 7/12/2017.
@@ -184,5 +185,12 @@ public class MainController implements IMainController {
             }
         }
         return match;
+    }
+
+    public ArrayList<Song> getAlldownloads(){
+        ArrayList<Song> songList = new ArrayList<>();
+        DBHelper dbhelper = new DBHelper(context,DBHelper.DB_NAME,null,DBHelper.DB_VERSION);
+        songList = dbhelper.getAllDownloads();
+        return songList;
     }
 }
