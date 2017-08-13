@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 
@@ -129,6 +130,7 @@ public class DetailController implements IDetailController {
             //set the query filter to our previously Enqueued download
             myDownloadQuery.setFilterById(referenceId);
             Cursor cursor = downloadManager.query(myDownloadQuery);
+            context.unregisterReceiver(downloadReceiver);
             if(cursor.moveToFirst()){
                 checkStatus(cursor,referenceId);
             }
@@ -218,6 +220,12 @@ public class DetailController implements IDetailController {
                 dbHelper.updateDownloadStatus(String.valueOf(referenceId), STATUS_COMPLETE);
                 break;
         }
+        Intent intent = new Intent("Your_IntentFilter_string");
+        intent.putExtra("key", "My Data");
+        //Put your all data using put extra
+
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
     }
 
 }

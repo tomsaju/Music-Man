@@ -1,6 +1,9 @@
 package fetcher.musicman.Fragment;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -39,6 +42,7 @@ public class DownloadFragment extends Fragment implements IMainListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainController = new MainController(getContext(), this);
+
     }
 
     @Override
@@ -118,5 +122,26 @@ public class DownloadFragment extends Fragment implements IMainListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        songArrayList =mainController.getAlldownloads();
+        if(songArrayList!=null&&!songArrayList.isEmpty()){
+            DownloadAdapter adapter = new DownloadAdapter(songArrayList,getContext());
+            downloadsList.setAdapter(adapter);
+        }
+    }
+
+    public BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null ) {
+                String str= intent.getStringExtra("key");
+                //Get all your data from intent and do what you want
+                onResume();
+            }
+        }
+    };
 
 }
