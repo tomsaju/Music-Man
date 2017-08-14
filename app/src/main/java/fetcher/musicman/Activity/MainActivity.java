@@ -1,10 +1,12 @@
 package fetcher.musicman.Activity;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -54,7 +56,8 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
         }else{
             //Show no network message
-            Toast.makeText(MainActivity.this, "No Network", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(MainActivity.this, "No Network", Toast.LENGTH_SHORT).show();
+            showNoNetworkDialog();
         }
     }
 
@@ -113,5 +116,47 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+    public void showNoNetworkDialog() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("No Internet");
+        alertDialogBuilder.setMessage("You are not connected to Internet");
+        alertDialogBuilder.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                arg0.dismiss();
+                loadMusic();
+            }
+        });
+
+        alertDialogBuilder.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                finish();
+            }
+
+        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+    public void  loadMusic(){
+        if(Utility.isNetworkAvailable(getBaseContext())) {
+            viewPager = (ViewPager) findViewById(R.id.pager);
+            adapter = new PagerAdapter(getSupportFragmentManager(), 3);
+
+            //Adding adapter to pager
+            viewPager.setAdapter(adapter);
+            viewPager.setOffscreenPageLimit(3);
+            viewPager.setOnPageChangeListener(this);
+            //Adding onTabSelectedListener to swipe views
+            tabLayout.setOnTabSelectedListener(this);
+            tabLayout.setupWithViewPager(viewPager);
+        }else{
+            showNoNetworkDialog();
+        }
     }
 }
